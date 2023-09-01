@@ -2,18 +2,26 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const userRoutes = require("./routes/userIntern.js");
+const projectRoutes = require("./routes/projects.js");
+const cors = require("cors");
 
 dotenv.config();
 
 
 const app = express();
 
+
 const port = process.env.PORT || 9000;
 
 //middleware
 app.use(express.json());
+app.use(cors({
+    origin: "*",
+    optionsSuccessStatus: 200 // Agrega esto para que el estado de éxito de las solicitudes OPTIONS sea 200
+})); // Habilita CORS para todas las rutas
+app.options("*", cors());
 app.use("/api",userRoutes);
-
+app.use("/api",projectRoutes);
 
 //routes
 app.get("/",(req,res)=>{

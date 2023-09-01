@@ -47,8 +47,17 @@ Content-Type: application/json
     "Data analyst",
     "PowerBI",
     "BI",
-    "Tableau"
+    "Estadística"
   ],
   "_Nombre": "Jair",
   "_Universidad": "Universidad Nacional Mayor de San Marcos"
+}
+
+###
+POST http://localhost:9000/api/usersIntern_login HTTP/1.1
+Content-Type: application/json
+
+{
+  "_Correo":"kevin.pantoja@unmsm.edu.pe",
+  "_Contraseña":"12345678"
 }
