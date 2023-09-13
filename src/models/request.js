@@ -10,6 +10,12 @@ const requestSchema = mongoose.Schema({
     "_correo": {
         type: String
     },
+    "_link_perfil": {
+        type: String
+    },
+    "_mensaje": {
+        type: String
+    },
 })
 
-module.exports = mongoose.model("Solicitud",requestSchema);
+module.exports = mongoose.model("Solicitud", requestSchema);

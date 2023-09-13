@@ -3,41 +3,41 @@ const projectSchema = require("../models/projects.js");
 
 const router = express.Router();
 
-//crear usuario
-router.post("/project",(req,res)=>{
-    const projects = projectSchema(req.body);
-    projects.save()
-    .then((data)=> res.json(data))
-    .catch((err) => res.json({message: err}));
+//crear proyecto
+// Ruta para registrar un nuevo proyecto
+router.post("/project", async(req, res) => {
+    try {
+        const { _descripcion, _objetivo, _titulo, _puestos } = req.body;
+
+        // Verificar si se proporcionaron los campos obligatorios
+        if (!_descripcion.trim() || !_objetivo.trim() || !_titulo.trim()) {
+            return res.status(400).json({ error: "Faltan campos obligatorios" });
+        }
+
+        // Verificar si el número de puestos es menor o igual a 0
+        if (_puestos.length <= 0) {
+            return res.status(400).json({ error: "El número de puestos debe ser mayor a 0" });
+        }
+
+        // Verificar que todos los campos "_cantidad" sean mayores a 0
+        if (_puestos.some((puesto) => puesto._cantidad <= 0)) {
+            return res.status(400).json({ error: "Todas las cantidades de los puestos debe ser mayor a 0" });
+        }
+
+        // Crear el nuevo proyecto
+        const nuevoProyecto = new projectSchema(req.body);
+
+        // Guardar el proyecto en la base de datos
+        const proyectoGuardado = await nuevoProyecto.save();
+
+        return res.status(201).json({ mensaje: "Proyecto registrado exitosamente", proyecto: proyectoGuardado });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
 });
 
-//obtener usuarios
-/*router.get("/usersIntern",(req,res)=>{
-    userSchema.find()
-    .then((data)=> res.json(data))
-    .catch((err) => res.json({message: err}));
-    //res.send("create user");
-})
-
-//validar existencia de cuenta
-router.get("/checkEmail_usersIntern", async (req, res) => {
-    const { email } = req.query;
-
-    try {
-        const existingUser = await userSchema.findOne({ "_Correo": email });
-
-        if (existingUser) {
-            res.json({ "encontrado": true });
-        } else {
-            res.json({ "encontrado": false });
-        }
-    } catch (error) {
-        res.json({ "message": error });
-    }
-});*/
-
 //obtener projectos con correo de creador en específico
-router.get("/project_byEmailAdmin", async (req, res) => {
+router.get("/project_byEmailAdmin", async(req, res) => {
     const { email } = req.query;
 
     try {
@@ -55,7 +55,7 @@ router.get("/project_byEmailAdmin", async (req, res) => {
 
 
 //obtener projecto por id
-router.get("/project_byId", async (req, res) => {
+router.get("/project_byId", async(req, res) => {
     const { id } = req.query;
 
     try {
@@ -72,7 +72,7 @@ router.get("/project_byId", async (req, res) => {
 });
 
 //luego de inscribir a una persona, se actualizan los puestos disponibles
-router.put("/project_updatePosition", async (req, res) => {
+router.put("/project_updatePosition", async(req, res) => {
     const { projectCode, positionCode } = req.body;
 
     try {
@@ -89,22 +89,16 @@ router.put("/project_updatePosition", async (req, res) => {
         if (position._cantidad > 1) {
             console.log("cantidad > 1");
             // Actualizar cantidad y estado
-            await projectSchema.findOneAndUpdate(
-                { "_id": projectCode, "_puestos._id": positionCode },
-                {
-                    $inc: { "_puestos.$._cantidad": -1 },
-                    $set: { "_puestos.$._estado": true }
-                }
-            );
+            await projectSchema.findOneAndUpdate({ "_id": projectCode, "_puestos._id": positionCode }, {
+                $inc: { "_puestos.$._cantidad": -1 },
+                $set: { "_puestos.$._estado": true }
+            });
         } else if (position._cantidad === 1) {
             console.log("cantidad == 1");
             // Actualizar cantidad a 0 y estado a false
-            await projectSchema.findOneAndUpdate(
-                { "_id": projectCode, "_puestos._id": positionCode },
-                {
-                    $set: { "_puestos.$._cantidad": 0, "_puestos.$._estado": false }
-                }
-            );
+            await projectSchema.findOneAndUpdate({ "_id": projectCode, "_puestos._id": positionCode }, {
+                $set: { "_puestos.$._cantidad": 0, "_puestos.$._estado": false }
+            });
         }
         res.status(200).json({ "message": "Actualización exitosa" });
     } catch (error) {
@@ -113,7 +107,7 @@ router.put("/project_updatePosition", async (req, res) => {
 });
 
 
-router.get("/project_availablePositions", async (req, res) => {
+router.get("/project_availablePositions", async(req, res) => {
     const { id } = req.query;
 
     try {
@@ -131,7 +125,7 @@ router.get("/project_availablePositions", async (req, res) => {
     }
 });
 
-router.get("/project_notAvailablePositions", async (req, res) => {
+router.get("/project_notAvailablePositions", async(req, res) => {
     const { id } = req.query;
 
     try {
@@ -148,41 +142,5 @@ router.get("/project_notAvailablePositions", async (req, res) => {
         res.status(500).json({ "message": "Error interno del servidor" });
     }
 });
-
-/*
-//eliminar un usuario
-router.delete("/usersIntern_delete", async (req, res) => {
-    const { email } = req.query;
-
-    try {
-        const deletedUser = await projectSchema.findOneAndDelete({ "_Correo": email });
-
-        if (deletedUser) {
-            res.json({ "message": "Usuario eliminado correctamente" });
-        } else {
-            res.status(404).json({ "message": "Usuario no encontrado" });
-        }
-    } catch (error) {
-        res.json({ "message": error });
-    }
-});
-
-//actualizar un usuario interno
-router.put("/usersIntern_update", async (req, res) => {
-    const { email } = req.query;
-    const newData = req.body; // Suponemos que los nuevos datos se enviarán en el cuerpo de la solicitud
-
-    try {
-        const updatedUser = await userSchema.findOneAndUpdate({ "_Correo": email }, newData, { new: true });
-
-        if (updatedUser) {
-            res.json(updatedUser);
-        } else {
-            res.status(404).json({ message: "Usuario no encontrado" });
-        }
-    } catch (error) {
-        res.json({ message: error });
-    }
-});*/
 
 module.exports = router;
