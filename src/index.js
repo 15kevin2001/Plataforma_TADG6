@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const requestRoutes = require("./routes/Request.js");
 const userRoutes = require("./routes/userIntern.js");
 const projectRoutes = require("./routes/projects.js");
 const cors = require("cors");
@@ -20,21 +21,22 @@ app.use(cors({
     optionsSuccessStatus: 200 // Agrega esto para que el estado de éxito de las solicitudes OPTIONS sea 200
 })); // Habilita CORS para todas las rutas
 app.options("*", cors());
-app.use("/api",userRoutes);
-app.use("/api",projectRoutes);
+app.use("/api", userRoutes);
+app.use("/api", requestRoutes);
+app.use("/api", projectRoutes);
 
 //routes
-app.get("/",(req,res)=>{
+app.get("/", (req, res) => {
     res.send("bienvenido a la api");
 });
 
 //creando la conexión con mongo db
 mongoose.connect(
-    process.env.MONGODB_URI
-)
-.then(()=>console.log("Contectado a la base de datos mongoDB"))
-.catch((err)=>{console.error(err)});
+        process.env.MONGODB_URI
+    )
+    .then(() => console.log("Contectado a la base de datos mongoDB"))
+    .catch((err) => { console.error(err) });
 
-app.listen(port, ()=>{
+app.listen(port, () => {
     console.log("server escuchando en el puerto ", port)
 });
