@@ -53,7 +53,6 @@ router.get("/project_byEmailAdmin", async(req, res) => {
     }
 });
 
-
 //obtener projecto por id
 router.get("/project_byId", async(req, res) => {
     const { id } = req.query;

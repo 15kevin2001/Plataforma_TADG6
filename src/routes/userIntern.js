@@ -80,7 +80,8 @@ router.put("/usersIntern_update", async(req, res) => {
         const updatedUser = await userSchema.findOneAndUpdate({ "_Correo": email }, newData, { new: true });
 
         if (updatedUser) {
-            res.json(updatedUser);
+            //res.json(updatedUser);
+            res.json({ message: "Actualizado con éxito" });
         } else {
             res.status(404).json({ message: "Usuario no encontrado" });
         }
