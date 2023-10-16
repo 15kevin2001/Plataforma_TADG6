@@ -4,6 +4,7 @@ const dotenv = require("dotenv");
 const requestRoutes = require("./routes/Request.js");
 const userRoutes = require("./routes/userIntern.js");
 const projectRoutes = require("./routes/projects.js");
+const approvedPosition = require("./routes/approvedPosition.js");
 const cors = require("cors");
 
 dotenv.config();
@@ -24,6 +25,7 @@ app.options("*", cors());
 app.use("/api", userRoutes);
 app.use("/api", requestRoutes);
 app.use("/api", projectRoutes);
+app.use("/api", approvedPosition);
 
 //routes
 app.get("/", (req, res) => {

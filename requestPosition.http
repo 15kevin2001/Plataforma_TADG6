@@ -13,3 +13,16 @@ GET http://localhost:9000/api/request_byProject?id_project=310820231 HTTP/1.1
 
 ###
 GET http://localhost:9000/api/request_byPosition?id_project=310820231&id_position=11111 HTTP/1.1
+
+###
+POST http://localhost:9000/api/approvedPosition HTTP/1.1
+Content-Type: application/json
+
+{ 
+    "_codigo_proyecto":"310820231",
+    "_codigo_puesto":"11112",
+    "_correo":"jair.llican@unmsm.edu.pe"
+}
+
+###
+GET http://localhost:9000/api/approvedPosition_byEmail?email=jair.llican@unmsm.edu.pe HTTP/1.1
