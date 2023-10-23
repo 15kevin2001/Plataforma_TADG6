@@ -90,6 +90,7 @@ router.put("/usersIntern_update", async(req, res) => {
     }
 });
 
+
 // Verificar credenciales y obtener usuario por correo y contraseña
 router.post("/usersIntern_login", async(req, res) => {
     console.log("peticion de login");

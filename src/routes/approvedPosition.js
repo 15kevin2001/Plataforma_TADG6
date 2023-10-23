@@ -44,12 +44,29 @@ router.post('/approvedPosition', async(req, res) => {
     }
 });
 
-//obtener todos las solicitud de postulación para un proyecto
+//
 router.get('/approvedPosition_byEmail', async(req, res) => {
     const { email } = req.query;
     try {
         // Verifica si hay puestos aprobados con el email
         const approved = await approvedSchema.find({ _correo: email });
+        if (!approved) {
+            return res.status(400).json({ error: `No se encontró puestos aprobados` });
+        }
+
+        res.json(approved);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+});
+
+//
+router.get('/approvedPosition_byProject', async(req, res) => {
+    const { id } = req.query;
+    try {
+        // Verifica si hay puestos aprobados con el email
+        const approved = await approvedSchema.find({ _codigo_proyecto: id });
         if (!approved) {
             return res.status(400).json({ error: `No se encontró puestos aprobados` });
         }
