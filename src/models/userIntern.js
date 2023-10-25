@@ -31,6 +31,9 @@ const userSchema = mongoose.Schema({
     "_Enlace_Presentacion": {
         type: String
     },
+    "_Foto_Perfil": {
+        type: mongoose.Schema.Types.Buffer
+    }
 })
 
-module.exports = mongoose.model("Usuario Interno",userSchema);
+module.exports = mongoose.model("Usuario Interno", userSchema);
