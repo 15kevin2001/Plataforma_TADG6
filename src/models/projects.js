@@ -43,8 +43,17 @@ const projectSchema = mongoose.Schema({
     "_estado": {
         type: String
     },
+    "_likes": {
+        type: mongoose.Schema.Types.Number
+    },
+    "_dislikes": {
+        type: mongoose.Schema.Types.Number
+    },
+    "_fechaPublicacion": {
+        type: mongoose.Schema.Types.Date
+    },
     "_puestos": [positionSchema],
 })
 
 
-module.exports = mongoose.model("Proyecto",projectSchema);
+module.exports = mongoose.model("Proyecto", projectSchema);

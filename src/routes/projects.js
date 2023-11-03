@@ -105,7 +105,7 @@ router.put("/project_updatePosition", async(req, res) => {
     }
 });
 
-
+//puestos disponibles en un proyecto
 router.get("/project_availablePositions", async(req, res) => {
     const { id } = req.query;
 
@@ -124,6 +124,7 @@ router.get("/project_availablePositions", async(req, res) => {
     }
 });
 
+//puestos ocupados en un proyecto
 router.get("/project_notAvailablePositions", async(req, res) => {
     const { id } = req.query;
 
@@ -139,6 +140,23 @@ router.get("/project_notAvailablePositions", async(req, res) => {
         res.status(200).json(notAvailablePositions);
     } catch (error) {
         res.status(500).json({ "message": "Error interno del servidor" });
+    }
+});
+
+//proyectos por descubrir
+router.get("/project_discover", async(req, res) => {
+    const { email } = req.query;
+
+    try {
+        const projects = await projectSchema.find({ "_administrador": { $ne: email } });
+
+        if (projects) {
+            res.json(projects);
+        } else {
+            res.status(404).json({ "message": `ningún proyecto por explorar para el email: ${email} fue encontrado` });
+        }
+    } catch (error) {
+        res.json({ "message": error });
     }
 });
 
