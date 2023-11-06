@@ -2,6 +2,7 @@ const express = require("express");
 const approvedSchema = require("../models/approvedPosition.js");
 const projectSchema = require("../models/projects.js");
 
+
 const router = express.Router();
 
 //post para registrar a un puesto aprobado
