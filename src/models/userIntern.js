@@ -33,6 +33,9 @@ const userSchema = mongoose.Schema({
     },
     "_Foto_Perfil": {
         type: mongoose.Schema.Types.Buffer
+    },
+    "_Enlace_Linkedln": {
+        type: String
     }
 })
 
